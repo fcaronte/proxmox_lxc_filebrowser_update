@@ -27,7 +27,10 @@ Esegui lo script direttamente dal tuo repository GitHub senza salvarlo localment
 
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/refs/heads/main/update-filebrowser.sh)" <-- ARGOMENTO>
+````
+
 # Esempio per aggiornare tutto:
+```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/refs/heads/main/update-filebrowser.sh)" -- all
 ````
 
@@ -83,7 +86,10 @@ You can run the script directly from your GitHub repository without downloading 
 
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/refs/heads/main/update-filebrowser.sh)" -- all <-- ARGUMENT>
+````
+
 # Example to update all:
+```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/refs/heads/main/update-filebrowser.sh)" -- all
 ```
 
