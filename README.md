@@ -33,7 +33,7 @@ Script avanzato per l'aggiornamento automatico, massivo e selettivo del binario 
 ### 1. Modalità Interattiva (GUI)
 Semplicemente esegui lo script senza parametri (o tramite l'URL diretto):
 ```bash
-bash -c "$(curl -fsSL [https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/refs/heads/main/update-filebrowser.sh](https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/refs/heads/main/update-filebrowser.sh))"
+wget -qLO update-filebrowser.sh https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/refs/heads/main/update-filebrowser.sh && chmod +x update-filebrowser.sh && ./update-filebrowser.sh
 
 ```
 
@@ -91,7 +91,7 @@ Advanced script for automated, massive, and selective updates of the official Fi
 Simply run the script with no parameters (or via direct URL execution):
 
 ```bash
-bash -c "$(curl -fsSL [https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/refs/heads/main/update-filebrowser.sh](https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/refs/heads/main/update-filebrowser.sh))"
+wget -qLO update-filebrowser.sh https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/refs/heads/main/update-filebrowser.sh && chmod +x update-filebrowser.sh && ./update-filebrowser.sh
 
 ```
 
