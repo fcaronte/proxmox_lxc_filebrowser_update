@@ -1,126 +1,128 @@
-# update-filebrowser.sh
+-----
 
-Script Bash per l'aggiornamento automatico e massivo di File Browser installato su Proxmox VE (Host e Container LXC).
+# 🌍 Language / Lingua
 
----
-
-## 🇮🇹 Istruzioni in Italiano
-
-### 🎯 Scopo dello Script
-
-Questo script semplifica il processo di aggiornamento del binario di File Browser (scaricando l'ultima versione ufficiale) in tutti i luoghi dove è stato installato sul tuo server Proxmox, sia direttamente sull'**Host** che all'interno dei **Container LXC** attivi.
-
-### ⚠️ Prerequisiti
-
-Lo script assume che:
-
-1.  **File Browser sia installato** utilizzando gli [Helper Scripts della community di Proxmox VE](https://community-scripts.github.io/ProxmoxVE/scripts).
-2.  L'installazione sia stata effettuata sul **Proxmox Host** e/o all'interno di uno o più **Container LXC basati su Debian/Alpine**.
-3.  All'interno di ogni LXC, il servizio sia gestito da `systemd` (o `openrc` in Alpine) con il nome di servizio standard: `filebrowser.service`.
-4.  Le utility `curl` e `tar` siano disponibili sia sull'Host che all'interno dei Container target.
-
-### ⚙️ Installazione e Configurazione
-
-#### Opzione A: Esecuzione Diretta (Consigliata)
-
-Esegui lo script direttamente dal tuo repository GitHub senza salvarlo localmente.
-
-```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/main/update-filebrowser.sh)" <-- ARGOMENTO>
-````
-
-# Esempio per aggiornare tutto:
-```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/main/update-filebrowser.sh)" -- all
-````
-
-#### Opzione B: Installazione Locale
-
-Per integrarlo nel tuo ambiente e renderlo eseguibile tramite un semplice comando:
-
-1.  **Salva lo script** in `/usr/local/bin/`:
-    ```bash
-    wget -O /usr/local/bin/update-filebrowser.sh https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/main/update-filebrowser.sh
-    ```
-2.  **Rendi lo script eseguibile:**
-    ```bash
-    chmod +x /usr/local/bin/update-filebrowser.sh
-    ```
-
-### 🚀 Utilizzo
-
-Esegui lo script come utente `root` sul tuo Host Proxmox:
-
-| Azione | Comando (Installazione Locale) | Comando (Esecuzione Diretta) | Descrizione |
-| :--- | :--- | :--- | :--- |
-| **Aggiorna Tutto** | `update-filebrowser.sh all` | `bash <(curl -fsSL <URL>) all` | Aggiorna l'installazione Host e tutte le LXC attive. |
-| **Aggiorna Solo Host** | `update-filebrowser.sh host` | `bash <(curl -fsSL <URL>) host` | Aggiorna solo File Browser installato sul Proxmox Host. |
-| **Aggiorna LXC Singola** | `update-filebrowser.sh 101` | `bash <(curl -fsSL <URL>) 101` | Aggiorna File Browser solo nella LXC con ID 101. |
-| **Aggiorna LXC Multiple** | `update-filebrowser.sh 101,102,105` | `bash <(curl -fsSL <URL>) 101,102,105` | Aggiorna selettivamente le LXC elencate. |
-| **Aiuto** | `update-filebrowser.sh help` | `bash <(curl -fsSL <URL>) help` | Mostra le istruzioni di utilizzo. |
-
-*(Nota: `<URL>` è l'URL RAW del tuo script sopra indicato).*
+  * [🇮🇹 Leggi in Italiano](#-proxmox-lxc-file-browser-updater-italiano)
+  * [🇬🇧 Read in English](#-proxmox-lxc-file-browser-updater-english)
 
 -----
 
-## 🇬🇧 English Instructions
+# 🇮🇹 Proxmox LXC File Browser Updater (Italiano)
 
-### 🎯 Script Purpose
+# 🚀 Proxmox LXC File Browser Updater (v1.0.3)
 
-This Bash script is designed to simplify the update process for the File Browser binary (by downloading the latest official release) across all locations where it is installed on your Proxmox VE server, including the **Host** machine and any **LXC Containers**.
+[![Bash Script](https://img.shields.io/badge/language-Bash-4EAA25.svg)](https://www.gnu.org/software/bash/)
+[![Proxmox](https://img.shields.io/badge/Platform-Proxmox-E57020.svg)](https://www.proxmox.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-### ⚠️ Requirements
+Script avanzato per l'aggiornamento automatico, massivo e selettivo del binario ufficiale di File Browser installato su Proxmox VE, sia direttamente sull'Host che all'interno dei Container LXC attivi.
 
-The script assumes that:
+---
 
-1.  **File Browser is installed** using the [Proxmox VE Community Helper Scripts](https://community-scripts.github.io/ProxmoxVE/scripts).
-2.  The installation was performed on the **Proxmox Host** and/or within one or more **Debian/Alpine-based LXC Containers**.
-3.  The service inside each LXC is managed by `systemd` (or `openrc` in Alpine) with the standard service name: `filebrowser.service`.
-4.  The `curl` and `tar` utilities are available on both the Host and inside the target Containers.
+## 🌟 Novità Versione 1.0.x
 
-### ⚙️ Installation and Setup
+* **Interfaccia Grafica (GUI/TUI)**: Se avviato senza argomenti, lo script apre un menu interattivo (whiptail) adattivo per selezionare visivamente i target e le opzioni.
+* **Controllo Intelligente di Presenza**: Verifica se File Browser è effettivamente installato nella destinazione (Host o LXC), saltando automaticamente i container non interessati senza generare falsi positivi.
+* **Modalità Dry-Run**: Consente di simulare l'intero processo e verificare la disponibilità degli aggiornamenti senza applicare modifiche reali.
+* **Esecuzione In-Process Sicura**: Eliminati i loop di subshell per garantire la totale stabilità di esecuzione indipendentemente dal nome del file locale.
 
-#### Option A: Direct Execution (Recommended)
+---
 
-You can run the script directly from your GitHub repository without downloading it first.
+## 🚀 Modalità di Esecuzione
 
+### 1. Modalità Interattiva (GUI)
+Semplicemente esegui lo script senza parametri (o tramite l'URL diretto):
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/main/update-filebrowser.sh)" -- all <-- ARGUMENT>
-````
-
-# Example to update all:
-```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/main/update-filebrowser.sh)" -- all
-```
-
-#### Option B: Local Installation
-
-To integrate it into your environment and make it runnable via a simple command:
-
-1.  **Save the script** in `/usr/local/bin/`:
-    ```bash
-    wget -O /usr/local/bin/update-filebrowser.sh https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/main/update-filebrowser.sh
-    ```
-2.  **Make the script executable:**
-    ```bash
-    chmod +x /usr/local/bin/update-filebrowser.sh
-    ```
-
-### 🚀 Usage
-
-Run the script as the `root` user on your Proxmox Host:
-
-| Action | Command (Local Installation) | Command (Direct Execution) | Description |
-| :--- | :--- | :--- | :--- |
-| **Update All** | `update-filebrowser.sh all` | `bash <(curl -fsSL <URL>) all` | Updates the Host installation and all running LXC containers. |
-| **Update Host Only** | `update-filebrowser.sh host` | `bash <(curl -fsSL <URL>) host` | Updates File Browser only on the Proxmox Host installation. |
-| **Update Single LXC** | `update-filebrowser.sh 101` | `bash <(curl -fsSL <URL>) 101` | Updates File Browser only in the LXC with ID 101. |
-| **Update Multiple LXCs**| `update-filebrowser.sh 101,102,105` | `bash <(curl -fsSL <URL>) 101,102,105` | Selectively updates the listed LXC IDs. |
-| **Help** | `update-filebrowser.sh help` | `bash <(curl -fsSL <URL>) help` | Displays usage instructions. |
+bash -c "$(curl -fsSL [https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/refs/heads/main/update-filebrowser.sh](https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/refs/heads/main/update-filebrowser.sh))"
 
 ```
 
-Spero che questa versione chiara e specifica ti sia utile per il tuo progetto su GitHub!
+Si aprirà un menu dove potrai scegliere visivamente se aggiornare l'Host, l'intera lista di LXC attivi o singoli container, oltre alla possibilità di attivare il Dry-Run.
 
-Hai bisogno di aiuto con l'aggiunta di altre funzionalità allo script o con la configurazione di un altro file di progetto (es. un file di licenza)?
+### 2. Modalità CLI (Terminale / Installazione Locale)
+
+| Comando | Descrizione |
+| --- | --- |
+| `update-filebrowser.sh all` | Aggiorna l'installazione Host e tutti i LXC attivi in cui è presente l'app. |
+| `update-filebrowser.sh host` | Aggiorna File Browser installato esclusivamente sul Proxmox Host. |
+| `update-filebrowser.sh 101` | Aggiorna l'applicazione solo all'interno del LXC con ID 101. |
+| `update-filebrowser.sh 101,102` | Aggiorna selettivamente i LXC elencati (separati da virgola). |
+| `update-filebrowser.sh all --dry-run` | Simula l'operazione su tutti i target senza modificare i file. |
+
+*Nota: Se usi l'esecuzione diretta via URL e vuoi passare i comandi CLI, ricordati di interporre il separatore `--` (es: `bash -c "$(curl...)" -- all`).*
+
+---
+
+## 📋 Note Tecniche e Sicurezza
+
+* **Rilevamento**: Lo script scansiona la presenza del binario in `/usr/local/bin/filebrowser` per identificare i target validi.
+* **Gestione Servizi**: Al termine del download del binario, lo script riavvia in sicurezza il servizio `filebrowser.service` via systemd (o openrc) e ne verifica lo stato.
+* **Report Finale**: Al termine delle operazioni viene mostrato un riepilogo visivo immediato con lo stato di ogni singolo target (Aggiornato  ✅, Non Presente 🟡, Errore ❌).
+
+---
+
+## 📝 Licenza
+
+Sviluppato con il supporto di **Gemini AI**. Licenza MIT.
+
+---
+
+# 🇬🇧 Proxmox LXC File Browser Updater (English)
+
+# 🚀 Proxmox LXC File Browser Updater (v1.0.3)
+
+Advanced script for automated, massive, and selective updates of the official File Browser binary installed on Proxmox VE, both directly on the Host and inside active LXC Containers.
+
+---
+
+## 🌟 Version 1.0.x Highlights
+
+* **Interactive GUI (TUI)**: Launching the script without arguments opens an adaptive whiptail menu to visually select targets and execution options.
+* **Smart Presence Detection**: Checks if File Browser is actually installed on the target destination (Host or LXC) before processing, automatically skipping unrelated containers.
+* **Dry-Run Mode**: Allows you to simulate the entire process and check update availability without making any real changes.
+* **Robust In-Process Execution**: Removed subshell loops to ensure complete execution stability regardless of the local file name.
+
+---
+
+## 🚀 Execution Modes
+
+### 1. Interactive Mode (GUI)
+
+Simply run the script with no parameters (or via direct URL execution):
+
+```bash
+bash -c "$(curl -fsSL [https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/refs/heads/main/update-filebrowser.sh](https://raw.githubusercontent.com/fcaronte/proxmox_lxc_filebrowser_update/refs/heads/main/update-filebrowser.sh))"
+
+```
+
+A graphical checklist menu will appear allowing you to pick targets (Host, All running LXCs, or single containers) and toggle flags like Dry-Run.
+
+### 2. CLI Mode (Terminal / Local Installation)
+
+| Command | Description |
+| --- | --- |
+| `update-filebrowser.sh all` | Updates the Host installation and all active LXCs where the app is detected. |
+| `update-filebrowser.sh host` | Updates File Browser only on the Proxmox Host installation. |
+| `update-filebrowser.sh 101` | Updates File Browser only inside the LXC with ID 101. |
+| `update-filebrowser.sh 101,102` | Selectively updates the listed comma-separated LXC IDs. |
+| `update-filebrowser.sh all --dry-run` | Checks targets and simulates the workflow without altering files. |
+
+*Note: If you use the direct URL execution method and want to pass CLI arguments, remember to append the `--` separator first (e.g., `bash -c "$(curl...)" -- all`).*
+
+---
+
+## 📋 Technical Notes & Safety
+
+* **Detection**: The script scans for the binary path in `/usr/local/bin/filebrowser` to identify valid update targets.
+* **Service Management**: After extracting the new binary, it securely restarts the `filebrowser.service` via systemd (or openrc) and validates its active state.
+* **Final Report**: Displays an instant visual summary indicating the outcome for each target (Updated ✅, Skipped/Not Present 🟡, Failed ❌).
+
+---
+
+## 📝 License
+
+Developed with **Gemini AI** support. MIT License.
+
+```
+
 ```
